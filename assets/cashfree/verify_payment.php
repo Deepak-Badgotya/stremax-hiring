@@ -1,0 +1,102 @@
+<?php
+
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+header("Content-Type: application/json");
+
+// Handle preflight requests
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
+// Read request body
+$input = file_get_contents('php://input');
+if (empty($input)) {
+    echo json_encode(['status' => 'error', 'message' => 'No data received']);
+    exit;
+}
+
+$data = json_decode($input, true);
+
+// Extract order ID
+$orderId = $data['txnid'] ?? null;
+if (!$orderId) {
+    echo json_encode(['status' => 'error', 'message' => 'Order ID is required']);
+    exit;
+}
+
+// ---------- Config ----------
+
+$clientId = 'TEST10391805bba611f4daa459b772ff50819301';
+$clientSecret = 'cfsk_ma_test_ae7f2166e630e0a21002d246c553a813_84981a2a';
+$apiVersion = '2023-08-01';
+$apiUrl = "https://sandbox.cashfree.com/pg/orders/$orderId";
+
+// ---------- Logger ----------
+function logMessage($message)
+{
+    $logFile = __DIR__ . "/api_log.txt";
+    file_put_contents($logFile, date("Y-m-d H:i:s") . " - " . $message . PHP_EOL, FILE_APPEND);
+}
+
+// ---------- API CALL ----------
+function getPaymentStatus($url, $clientId, $clientSecret, $apiVersion)
+{
+    $headers = [
+        "Accept: application/json",
+        "x-client-id: $clientId",
+        "x-client-secret: $clientSecret",
+        "x-api-version: $apiVersion"
+    ];
+
+    $curl = curl_init();
+    curl_setopt_array($curl, [
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_CUSTOMREQUEST => "GET",
+        CURLOPT_HTTPHEADER => $headers,
+    ]);
+
+    $response = curl_exec($curl);
+    if (curl_errno($curl)) {
+        logMessage("CURL Error: " . curl_error($curl));
+        return null;
+    }
+
+    unset($curl);
+    return json_decode($response, true);
+}
+
+// ---------- Main Execution ----------
+
+$response = getPaymentStatus($apiUrl, $clientId, $clientSecret, $apiVersion);
+logMessage("CHECK ORDER STATUS for Order ID $orderId: " . json_encode($response));
+
+if (is_array($response) && isset($response['order_id'])) {
+
+    $orderData = [
+        // 1. Direct access for Order ID
+        'orderId' => $response['order_id'] ?? '',
+
+        // 2. Nested access for Customer ID
+        'customerId' => $response['customer_details']['customer_id'] ?? '',
+
+        // 3. Status mapping (Orders use 'order_status')
+        'state' => ($response['order_status'] === 'PAID' ? 'COMPLETED' : $response['order_status']),
+
+        'amount' => $response['order_amount'] ?? 0,
+        'currency' => $response['order_currency'] ?? 'INR'
+    ];
+
+    echo json_encode(['status' => 'success', 'wpResponse' => $orderData]);
+} else {
+    echo json_encode([
+        "status" => "error",
+        "message" => "Cashfree API error or Order not found",
+        "wpResponse" => null,
+        "raw_from_cashfree" => $response
+    ]);
+}
+
