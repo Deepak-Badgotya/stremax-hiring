@@ -29,10 +29,10 @@ if (!$orderId) {
 
 // ---------- Config ----------
 
-$clientId = 'TEST10391805bba611f4daa459b772ff50819301';
-$clientSecret = 'cfsk_ma_test_ae7f2166e630e0a21002d246c553a813_84981a2a';
+$clientId = '8420072250b7c4da59170b74bb700248';
+$clientSecret = 'cfsk_ma_prod_0c6ecd97d3a25e95060ffdec5b4cdd82_8ed72881';
 $apiVersion = '2023-08-01';
-$apiUrl = "https://sandbox.cashfree.com/pg/orders/$orderId";
+$apiUrl = "https://api.cashfree.com/pg/orders/$orderId";
 
 // ---------- Logger ----------
 function logMessage($message)

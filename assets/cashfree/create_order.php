@@ -55,11 +55,11 @@ if (
 
         function createCashfreeOrder($id, $name, $mobile, $email, $amount)
         {
-            $appId = 'TEST10391805bba611f4daa459b772ff50819301';
-            $secretKey = 'cfsk_ma_test_ae7f2166e630e0a21002d246c553a813_84981a2a';
+            $appId = '8420072250b7c4da59170b74bb700248';
+            $secretKey = 'cfsk_ma_prod_0c6ecd97d3a25e95060ffdec5b4cdd82_8ed72881';
             $orderId = generateUniqueOrderId();
 
-            $url = "https://sandbox.cashfree.com/pg/orders";
+            $url = "https://api.cashfree.com/pg/orders";
 
             $payload = [
                 "order_id" => $orderId,
@@ -74,8 +74,8 @@ if (
                 ],
                 "order_meta" => [
                     // Production url
-                    //"return_url" => "https://stremaxfoundation.org/assets/cashfree/verify.html?txnId={order_id}"
-                    "return_url" => "https://elle-noisy-carelessly.ngrok-free.dev/stremax-hiring/assets/cashfree/verify.html?txnId={order_id}"
+                    "return_url" => "https://hiring.stremaxfoundation.org/assets/cashfree/verify.html?txnId={order_id}"
+                    //"return_url" => "https://elle-noisy-carelessly.ngrok-free.dev/stremax-hiring/assets/cashfree/verify.html?txnId={order_id}"
                 ]
             ];
 
@@ -107,7 +107,7 @@ if (
 
         $name = $data['name'];
         $mobile = $data['mobile'];
-        $amount = $data['amount'] ?? 350; // Added fallback amount
+        $amount = $data['amount'] ?? 1; // Added fallback amount
 
         $response = createCashfreeOrder($id, $name, $mobile, $email, $amount);
         logMessage("PAYMENT REQUEST: " . json_encode($response));
@@ -118,7 +118,7 @@ if (
                 "success" => true,
                 "order_id" => $response['order_id'],
                 "payment_session_id" => $response['payment_session_id'],
-                "redirect_url" => $response['payments']['url'] ?? "https://sandbox.cashfree.com" . $response['payment_session_id']
+                "redirect_url" => $response['payments']['url'] ?? "https://api.cashfree.com" . $response['payment_session_id']
             ]);
             exit;
         }

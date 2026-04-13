@@ -70,7 +70,7 @@ document.getElementById("position").addEventListener("change", function () {
 });
 
 // Initialize Cashfree (use "sandbox" for testing, "production" for live)
-const cashfree = Cashfree({ mode: "sandbox" });
+const cashfree = Cashfree({ mode: "production" });
 
 /* Form Submittion */
 document
@@ -122,10 +122,10 @@ document
 
 // Function for payment order
 function cashfreePayment(data) {
-  //1. Create order in php (Send ₹200 & student details)
+  //1. Create order in php (Send ₹351 & student details)
   fetch("assets/cashfree/create_order.php", {
     method: "POST",
-    body: JSON.stringify({ amount: 200, customer_id: data.mobile, ...data }),
+    body: JSON.stringify({ amount: 1, customer_id: data.mobile, ...data }),
   })
     .then((response) => response.json())
     .then((data) => {
@@ -156,7 +156,7 @@ function cashfreePayment(data) {
           };
 
           window.location.href =
-            "https://elle-noisy-carelessly.ngrok-free.dev/stremax-hiring/assets/cashfree/verify.html?txnId=" +
+            "https://hiring.stremaxfoundation.org/assets/cashfree/verify.html?txnId=" +
             data.order_id;
         }
       });

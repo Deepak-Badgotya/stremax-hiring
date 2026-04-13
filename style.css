@@ -514,11 +514,33 @@ input[type="checkbox"] {
     }
 }
 
+/* ===== TOP BAR ===== */
+.top-bar {
+    padding-block: clamp(var(--spacing-8), 2cqi, var(--spacing-8));
+    backdrop-filter: blur(var(--spacing-40));
+    background-color: #FBB144;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    .top-bar-inner {
+        padding: 0;
+        gap: clamp(2rem, 3cqi, 4rem);
+    }
+
+    .bar-btn {
+        padding: var(--spacing-4) var(--spacing-16);
+        font-size: smaller;
+        img {
+            width: 1rem;
+        }
+    }
+}
 
 /* ===== HERO SECTION ===== */
 .hero {
     padding: 8rem 0 6rem 0;
-    background: linear-gradient(rgba(187, 155, 28, 0.45), rgba(5, 11, 70, 0.4)), url(assets/img/hero-bg.png) no-repeat center center / cover;
+    background: linear-gradient(rgba(187, 155, 28, 0.45), rgba(5, 11, 70, 0.4)), url(assets/img/hero-bg.webp) no-repeat center center / cover;
     background-position: unset;
     background-size: cover;
 }
@@ -665,50 +687,6 @@ input[type="checkbox"] {
 }
 
 /* ===== WORK ==== */
-/* Bento Grid */
-
-/* @media (min-width:576px) {
-    .container {
-        max-width: 540px;
-    }
-
-    .grid-main {
-        grid-template-areas:
-            "one"
-            "two"
-            "three"
-            "four"
-            "five";
-    }
-}
-
-@media (min-width:768px) {
-    .container {
-        max-width: 720px;
-    }
-
-    .grid-main {
-        grid-template-areas:
-            "one one"
-            "two five"
-            "three five"
-            "four four";
-    }
-}
-
-@media (min-width:992px) {
-    .container {
-        max-width: 960px;
-    }
-
-    .grid-main {
-        grid-template-areas:
-            "one one"
-            "two five"
-            "three five"
-            "four four";
-    }
-}
 
 @media (min-width:1200px) {
 
@@ -731,7 +709,7 @@ input[type="checkbox"] {
             "three four four five";
     }
 }
- */
+
 .grid-main h1 {
     font-size: 2rem;
     font-weight: 800;
@@ -851,7 +829,7 @@ input[type="checkbox"] {
 
 .testimonial-set {
     overflow-x: auto;
-    padding: clamp (var(--spacing-4) 8cqi var(--spacing-24));
+    padding: clamp(var(--spacing-4), 8cqi, var(--spacing-24));
 
 }
 
@@ -1018,7 +996,6 @@ input[type="checkbox"] {
 /* ===== NOTE INTERV SECTION ===== */
 .note-interv-inner {
     background-color: #FBB144;
-    width: max-content;
     margin: auto;
     padding: var(--spacing-4) var(--spacing-8);
     color: var(--brand-800);
@@ -1242,7 +1219,11 @@ input[type="checkbox"] {
 
 /* ===== RESPONSIVE DESIGN / MEDIA QUERIES ===== */
 @media (max-width: 768px) {
-    
+    p {
+        text-align: justify;
+    }
+
+    .top-bar-inner,
     .logos,
     .position-overview-bottom,
     .project-card-top,
@@ -1270,11 +1251,13 @@ input[type="checkbox"] {
         width: 100% !important;
     }
 
-    li img , .card li img{
+    li img,
+    .card li img {
         width: 0.5rem !important;
     }
 
-    a img, .project-card a img {
+    a img,
+    .project-card a img {
         width: 1.5rem !important;
     }
 
@@ -1290,7 +1273,8 @@ input[type="checkbox"] {
         animation-play-state: paused;
     }
 
-    .testimonials-bottom::before, .testimonial-bottom::after {
+    .testimonials-bottom::before,
+    .testimonial-bottom::after {
         background: none !important;
     }
 
